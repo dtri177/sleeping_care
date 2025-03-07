@@ -17,7 +17,7 @@ const MongoStore = require('connect-mongo');
 dotenv.config();
 require('./config/passport');
 const app = express();
-
+x
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,7 +26,7 @@ app.use(cookieParser());
 // Passport & Session
 
 app.use(session({
-  secret: process.env.SECRET_KEY ,
+  secret: process.env.SESSION_SECRET ,
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
