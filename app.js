@@ -59,8 +59,11 @@ require('dotenv').config();
 console.log();
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`)
 
-);
+// Chỉ chạy server khi không ở môi trường Vercel
+if (process.env.NODE_ENV !== "production") {
+    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+}
 
+// Export app để Vercel xử lý
 module.exports = app;
