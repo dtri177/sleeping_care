@@ -1,6 +1,7 @@
 {
   "scripts": {
     "start": "node app.js",
+    "vercel": "vercel --prod",
     "dev": "nodemon app.js"
   },
   "dependencies": {
