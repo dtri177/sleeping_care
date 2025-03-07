@@ -4,7 +4,6 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const path = require('path');
-const {setUser} = require('./middlewares/authMiddleware'); 
 const connectDB = require('./config/db');
 const authenRoutes = require('./routes/authenRoutes');
 const soundRoutes = require('./routes/soundRoutes');
@@ -44,7 +43,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Use authentication middleware
-app.use(setUser);
 // Set View Engine
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');

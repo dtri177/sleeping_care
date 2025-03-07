@@ -109,36 +109,34 @@ function getCookie(name) {
     return null;
 }
 
-function updateUserDisplay() {
-    const userCookie = getCookie('userData'); // Assume 'userData' stores JSON string with user info
-
-    if (userCookie) {
-        try {
-            const user = JSON.parse(decodeURIComponent(userCookie));
-
-            if (user && user.name) {
-                document.getElementById("user-name").innerText = `Welcome, ${user.name}`;
-                document.getElementById("auth-action").href = "/auth/logout";
-                document.getElementById("auth-action").innerHTML = `
-                    <span>Logout</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M21,11H11.41l2.3-2.29a1,1,0,1,0-1.42-1.42l-4,4a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l4,4a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L11.41,13H21a1,1,0,0,0,0-2Z"/>
-                    </svg>
-                `;
-                document.getElementById("profile-link").innerHTML = `
+async function updateUserDisplay() {
+    try {
+        const response = await fetch('/auth/user', { credentials: 'include' }); // Send cookies with request
+        if (!response.ok) throw new Error('Failed to fetch user data');
+        const user = await response.json();
+        if (user.user && user.user.name) {
+            document.getElementById("user-name").innerText = `Welcome, ${user.user.name}`;
+            document.getElementById("auth-action").href = "/auth/logout";
+            document.getElementById("auth-action").innerHTML = `
+                <span>Logout</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M21,11H11.41l2.3-2.29a1,1,0,1,0-1.42-1.42l-4,4a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l4,4a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L11.41,13H21a1,1,0,0,0,0-2Z"/>
+                </svg>
+            `;
+            document.getElementById("profile-link").innerHTML = `
                 <a href="/user/profile" id="profile-icon">
-                <i class="fa-solid fa-user-circle fa-2x"></i>
+                    <i class="fa-solid fa-user-circle fa-2x"></i>
                 </a>
-                `;
-            }
-        } catch (error) {
-            console.error("Error parsing user cookie:", error);
+            `;
         }
+    } catch (error) {
+        console.error("Error fetching user data:", error);
     }
 }
 
-function refreshAccessToken() {
-    fetch('/auth/refresh-token', { method: 'POST', credentials: 'include' })
+
+async function refreshAccessToken() {
+  await  fetch('/auth/refresh-token', { method: 'POST', credentials: 'include' })
         .then(response => response.json())
         .then(data => {
             if (data.accessToken) {
@@ -149,7 +147,7 @@ function refreshAccessToken() {
 }
 
 setInterval(refreshAccessToken, 14 * 60 * 1000);
-updateUserDisplay();
+window.onload = updateUserDisplay;
 
 // Initialize the chat application when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", attachEventListeners);

@@ -258,3 +258,15 @@ exports.verifyEmail = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+exports.getUser = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Not authenticated" });
+}
+res.json({ user: {
+  name: req.user.name,  // Send user info (but NOT sensitive data like password)
+  email: req.user.email,
+}
+   
+});
+}
