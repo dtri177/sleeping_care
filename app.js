@@ -25,14 +25,18 @@ app.use(cookieParser());
 // Passport & Session
 
 app.use(session({
-  secret: process.env.SECRET_KEY,
+  secret: process.env.SESSION_SECRET ,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI, // Dùng cùng URI với MongoDB Atlas
+    collectionName: 'sessions',
+    ttl: 14 * 24 * 60 * 60 // Session hết hạn sau 14 ngày
+  }),
   cookie: {
+    secure: process.env.NODE_ENV === 'production', // Chỉ bật secure khi chạy trên HTTPS
     httpOnly: true,
-    secure: false, // Change to true in production with HTTPS
-    sameSite: 'Strict',
-    maxAge: 1000 * 60 * 60 // 1 hour
+    maxAge: 1000 * 60 * 60 * 24 // 1 ngày
   }
 }));
 app.use(passport.initialize());
