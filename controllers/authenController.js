@@ -71,14 +71,16 @@ exports.googleCallback = (req, res, next) => {
 
         // Set cookies
         res.cookie('accessToken', accessToken, {
-          httpOnly: false, // Set to true for security
-          secure: false, // Change to true in production with HTTPS
+          httpOnly: true, // Set to true for security
+          secure: true, // Change to true in production with HTTPS
           sameSite: 'Strict',
           maxAge: 15 * 60 * 1000 // 15 minutes
         });
         res.cookie('refreshToken', refreshToken, {
-          httpOnly: false,
-          secure: false
+          httpOnly: true,
+          secure: true,
+          sameSite: 'Strict',
+          maxAge: 15 * 60 * 1000 // 15 minutes
         });
 
         if(existingUser.role=='admin') {
@@ -98,7 +100,7 @@ exports.googleCallback = (req, res, next) => {
 exports.logout = (req, res) => {
   try {
   
-    res.clearCookie('userData', { path: '/', httpOnly: true, secure: false, sameSite: 'Strict' });
+    res.clearCookie('userData', { path: '/', httpOnly: true, secure: true, sameSite: 'Strict' });
     // Clear JWT cookies
     res.clearCookie('accessToken', { path: '/', httpOnly: true, sameSite: 'Lax' });
     res.clearCookie('refreshToken', { path: '/', httpOnly: true, sameSite: 'Lax' });
@@ -147,7 +149,7 @@ exports.refreshToken = (req, res) => {
       // Set new access token in cookie
       res.cookie("accessToken", newAccessToken, {
           httpOnly: true, 
-          secure: false, 
+          secure: true, 
           sameSite: "Strict",
           maxAge: 15 * 60 * 1000 // 15 minutes
       });
@@ -178,8 +180,18 @@ exports.login = async (req, res) => {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    res.cookie("accessToken", accessToken, { httpOnly: true, sameSite: "Strict" });
-    res.cookie("refreshToken", refreshToken, { httpOnly: true, sameSite: "Strict" });
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true, // Set to true for security
+      secure: true, // Change to true in production with HTTPS
+      sameSite: 'Strict',
+      maxAge: 15 * 60 * 1000 // 15 minutes
+    });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Strict',
+      maxAge: 15 * 60 * 1000 // 15 minutes
+    });
     if(user.role=='admin') {
       return res.redirect('/admin');
 
