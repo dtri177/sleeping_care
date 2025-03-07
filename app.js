@@ -17,7 +17,7 @@ const MongoStore = require('connect-mongo');
 dotenv.config();
 require('./config/passport');
 const app = express();
-x
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
