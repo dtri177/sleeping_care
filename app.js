@@ -13,7 +13,7 @@ const aiRoutes = require('./routes/aiRoutes');
 const payRoutes = require('./routes/payRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const MongoStore = require('connect-mongo')
-
+//them 1 casi gi do de update
 dotenv.config();
 require('./config/passport');
 const app = express();
