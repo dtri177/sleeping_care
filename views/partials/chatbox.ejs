@@ -1,0 +1,33 @@
+<div id="chatPage" class="chatbox-container hidden">
+    <div class="chat-header">
+        Chatbox
+        <button class="close-btn" onclick="closeChat()">✖</button>
+    </div>
+    <div id="chatContainer" class="chat-container"></div>
+
+<!-- Footer -->
+<div class="chat-footer">
+  <input type="text" id="text" placeholder="Ask me anything" autocomplete="off" required>
+  <button id="attachment">
+      <i class="fas fa-paperclip"></i>
+  </button>
+  <button id="send">
+    <i class="fas fa-location-arrow"></i>
+  </button>
+</div>
+</div>
+<script src="/js/script.js"></script>
+<button id="openChatBtn" class="chat-open-btn" onclick="openChat()">💬</button>
+<script>
+    function closeChat() {
+    const chatPage = document.getElementById("chatPage");
+    chatPage.style.display = "none";  // Hide the chatbox
+    document.getElementById("openChatBtn").style.display = "block"; // Show the open button again
+}
+    function openChat() {
+    const chatPage = document.getElementById("chatPage");
+    chatPage.style.display = "flex";  // Ensure the chatbox is visible
+    document.getElementById("openChatBtn").style.display = "none"; // Hide the open button
+}
+</script>
+

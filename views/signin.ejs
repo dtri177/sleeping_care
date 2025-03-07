@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+	<%- include('partials/css') %>
+    <title>Sign In</title>
+	
+</head>
+<body>
+	<%- include('partials/header') %>
+	<%- include('partials/sidebar') %>
+    <main class="main">
+		<div class="container-fluid">
+			<div class="row row--grid">
+				<!-- breadcrumb -->
+				<div class="col-12">
+					<ul class="breadcrumb">
+						<li class="breadcrumb__item"><a href="index-2.html">Home</a></li>
+						<li class="breadcrumb__item breadcrumb__item--active">Sign in</li>
+					</ul>
+				</div>
+				<!-- end breadcrumb -->
+				<div id="messageBox" style="display: none; padding: 10px; margin-top: 10px;"></div>
+
+				<!-- sign in -->
+				<div class="col-12">
+					<div class="sign">
+						<div class="sign__content">
+
+							<!-- authorization form -->
+							<form action="/auth/login" class="sign__form" method="POST" id="loginForm">
+								<a href="index-2.html" class="sign__logo">
+									<img src="img/logo.svg" alt="">
+								</a>
+
+								<div class="sign__group">
+									<input type="text" class="sign__input" name="email" placeholder="Email">
+								</div>
+
+								<div class="sign__group">
+									<input type="password" class="sign__input" name="password" placeholder="Password">
+								</div>
+
+							
+								
+								<button class="sign__btn" type="submit">Sign in</button>
+
+								<span class="sign__delimiter">or</span>
+
+								<div class="sign__social">
+									<a></a>
+									<a class="gl" href="/auth/google"><svg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'><path d='M473.16 221.48l-2.26-9.59H262.46v88.22H387c-12.93 61.4-72.93 93.72-121.94 93.72-35.66 0-73.25-15-98.13-39.11a140.08 140.08 0 01-41.8-98.88c0-37.16 16.7-74.33 41-98.78s61-38.13 97.49-38.13c41.79 0 71.74 22.19 82.94 32.31l62.69-62.36C390.86 72.72 340.34 32 261.6 32c-60.75 0-119 23.27-161.58 65.71C58 139.5 36.25 199.93 36.25 256s20.58 113.48 61.3 155.6c43.51 44.92 105.13 68.4 168.58 68.4 57.73 0 112.45-22.62 151.45-63.66 38.34-40.4 58.17-96.3 58.17-154.9 0-24.67-2.48-39.32-2.59-39.96z'/></svg></a>
+									<a></a>
+								</div>
+
+								<span class="sign__text">Don't have an account? <a href="/auth/register">Sign up!</a></span>
+
+								<span class="sign__text"><a href="forgot.html">Forgot password?</a></span>
+							</form>
+							<!-- end authorization form -->
+						</div>
+					</div>
+				</div>
+				<!-- end sign in -->
+			</div>
+		</div>
+
+	</main>
+    
+    <%- include('partials/footer') %>
+	<script>
+		document.getElementById("loginForm").addEventListener("submit", async function (event) {
+			event.preventDefault(); // Prevent default form submission
+		
+			const formData = new FormData(this);
+			const jsonData = Object.fromEntries(formData.entries());
+		
+			try {
+				const response = await fetch("/auth/login", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(jsonData),
+				});
+		
+				const data = await response.json();
+		
+				const messageBox = document.getElementById("messageBox");
+				messageBox.style.display = "block";
+				messageBox.style.color = response.ok ? "green" : "red";
+				messageBox.textContent = data.message;
+		
+				if (response.ok) {
+					setTimeout(() => {
+						window.location.href = "/"; // Redirect after success
+					}, 3000);
+				}
+			} catch (error) {
+				console.error("Error:", error);
+			}
+		});
+		</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('partials/head_admin'); %>
+
+<body class="sidebar-mini fixed">
+    <div class="loader-bg">
+        <div class="loader-bar"></div>
+    </div>
+    <div class="wrapper">
+        <%- include('common/side_nav'); %>
+
+        <div class="content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="main-header">
+                        <h4>Dashboard</h4>
+                    </div>
+                </div>
+
+                <div class="row dashboard-header"></div>
+
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-header-text">Sales Chart</h5>
+                            </div>
+                            <div class="card-block">
+                                <div id="barchart" style="min-width: 250px; height: 330px; margin: 0 auto"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-12 grid-item">
+                        <div class="card dashboard-product">
+                            <span>Total Sales Today</span>
+                            <h2 class="dashboard-total-products"><%= totalSales %></h2>
+                            <div class="side-box">
+                                <i class="ti-tag text-danger-color"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-12 grid-item">
+                        <div class="card dashboard-product">
+                            <span>Total Sales This Month</span>
+                            <h2 class="dashboard-total-products"><%= monthlySales %></h2>
+                            <div class="side-box">
+                                <i class="ti-tag text-danger-color"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-8 col-lg-12">
+                        <div class="card">
+                            <div class="card-block">
+                                <div class="table-responsive">
+                                    <table class="table m-b-0 photo-table">
+                                        <thead>
+                                            <tr class="text-uppercase">
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Status</th>
+                                           
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% users.forEach(user => { %>
+                                            <tr>
+                                                <td><%= user.name %></td>
+                                                <td><%= user.email %>
+                                                    <p><i class="icofont icofont-clock-time"></i></p>
+                                                </td>
+                                                <td><%= user.status %></td>
+                                              
+                                            </tr>
+                                            <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-header-text">Sales Distribution</h5>
+                            </div>
+                            <div class="card-block">
+                                <canvas id="salesChart" style="width:100%;max-width:600px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="https://code.highcharts.com/highcharts.js"></script>
+            <script>
+                // Parse sales data from server
+                const salesData = JSON.parse('<%- JSON.stringify(salesData) %>');
+                // Prepare data for Highcharts bar chart
+                const salesDates = Object.keys(salesData).filter(key => key.includes('-'));
+                const salesCategories = salesDates.map(date => {
+                    return new Date(date).toLocaleDateString('en-GB', {
+                        day: 'numeric',
+                        month: 'short'
+                    });
+                });
+                
+                const salesValues = salesDates.map(date => salesData[date]);
+
+                // Highcharts Sales Chart
+                Highcharts.chart('barchart', {
+                    title: { text: 'Sales Data Over Time' },
+                    xAxis: { categories: salesCategories, title: { text: 'Date' } },
+                    yAxis: { title: { text: 'Total Sales' }, min: 0 },
+                    series: [{
+                        type: 'column',
+                        name: 'Sales',
+                        data: salesValues,
+                        color: '#f57c00'
+                    }, {
+                        type: 'spline',
+                        name: 'Average',
+                        data: salesValues.map(value => value / 2), // Changed divisor for more realistic average line
+                        marker: { lineWidth: 2, lineColor: Highcharts.getOptions().colors[3], fillColor: 'white' }
+                    }]
+                });
+
+                // Chart.js Sales Pie Chart
+                const labels = ['Completed', 'Returned', 'Cancelled'];
+                const counts = [
+                    salesData.completed || 0, 
+                    salesData.returned || 0, 
+                    salesData.cancelled || 0
+                ];
+
+                new Chart("salesChart", {
+                    type: "pie",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            backgroundColor: ["#4CAF50", "#FFC107", "#F44336"],
+                            data: counts
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: "Sales Status Distribution"
+                            }
+                        }
+                    }
+                });
+            </script>
+
+            <%- include('common/script'); %>
+        </div>
+    </div>
+</body>
+</html>

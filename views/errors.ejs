@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('partials/css') %>
+
+</head>
+<body>
+    <%- include('partials/header') %>
+    <%- include('partials/sidebar') %>
+    <main class="main">
+		<div class="container-fluid">
+			<div class="row row--grid">
+				<!-- breadcrumb -->
+				<div class="col-12">
+					<ul class="breadcrumb">
+						<li class="breadcrumb__item"><a href="/">Home</a></li>
+						<li class="breadcrumb__item breadcrumb__item--active">Error</li>
+					</ul>
+				</div>
+				<!-- end breadcrumb -->
+
+				<!-- error -->
+				<div class="col-12">
+					<div class="page-404">
+						<div class="page-404__wrap">
+							<div class="page-404__content">
+								<h1 class="page-404__title"></h1>
+								<p class="page-404__text"><%= message %></p>
+								<a href="/" class="page-404__btn">go back</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- end error -->
+			</div>
+		</div>
+	</main>
+    <%- include('partials/footer') %>
+</body>
+</html>

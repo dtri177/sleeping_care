@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <%- include('partials/css') %>
+
+</head>
+<body>
+    <%- include('partials/header') %>
+    <%- include('partials/sidebar') %>
+
+    <main class="main">
+		<div class="container-fluid">
+			<div class="row row--grid">
+				<!-- breadcrumb -->
+				<div class="col-12">
+					<ul class="breadcrumb">
+						<li class="breadcrumb__item"><a href="index-2.html">Home</a></li>
+						<li class="breadcrumb__item breadcrumb__item--active">Profile</li>
+					</ul>
+				</div>
+				<!-- end breadcrumb -->
+
+				<!-- title -->
+				<div class="col-12">
+					<div class="main__title main__title--page">
+						<h1>Profile</h1>
+					</div>
+				</div>
+				<!-- end title -->
+			</div>
+
+			<div class="row row--grid">
+				<div class="col-12">
+					<div class="profile">
+						<div class="profile__user">
+							<div class="profile__avatar">
+								<img src="img/avatar.svg" alt="">
+							</div>
+							<div class="profile__meta">
+								<h3> <%= user.name %></h3>
+								<span>Blast ID: 11104</span>
+							</div>
+						</div>
+
+						<!-- tabs nav -->
+						<ul class="nav nav-tabs profile__tabs" id="profile__tabs" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">Profile</a>
+							</li>
+
+							<!-- <li class="nav-item">
+								<a class="nav-link" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false">Orders</a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false">Pricing plan</a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab-4" aria-selected="false">Settings</a>
+							</li> -->
+						</ul>
+						<!-- end tabs nav -->
+
+						
+					</div>
+                    <%- include('partials/chatbox') %>
+
+					<!-- content tabs -->
+					<div class="tab-content">
+						<div class="tab-pane fade show active" id="tab-1" role="tabpanel">
+							<div class="row row--grid">
+								
+
+							
+
+
+							</div>
+
+							<div class="row row--grid">
+								<!-- dashbox -->
+								<div class="col-12 col-lg-6">
+									<div class="dashbox">
+										<div class="dashbox__title">
+											<h3><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.05566,2h-14a3.00328,3.00328,0,0,0-3,3V19a3.00328,3.00328,0,0,0,3,3h14a3.00328,3.00328,0,0,0,3-3V5A3.00328,3.00328,0,0,0,19.05566,2Zm-14,2h14a1.001,1.001,0,0,1,1,1v8H17.59082a1.99687,1.99687,0,0,0-1.66406.89062L14.52051,16H9.59082L8.18457,13.89062A1.99687,1.99687,0,0,0,6.52051,13H4.05566V5A1.001,1.001,0,0,1,5.05566,4Zm14,16h-14a1.001,1.001,0,0,1-1-1V15H6.52051l1.40625,2.10938A1.99687,1.99687,0,0,0,9.59082,18h4.92969a1.99687,1.99687,0,0,0,1.66406-.89062L17.59082,15h2.46484v4A1.001,1.001,0,0,1,19.05566,20Z"/></svg> Notifications <span>17</span></h3>
+
+											<div class="dashbox__wrap">
+												<a class="dashbox__refresh" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,0,0,5.12,4.77V3a1,1,0,0,0-2,0V7.5a1,1,0,0,0,1,1H8.62a1,1,0,0,0,0-2H6.22A8,8,0,1,1,4,12a1,1,0,0,0-2,0A10,10,0,1,0,12,2Zm0,6a1,1,0,0,0-1,1v3a1,1,0,0,0,1,1h2a1,1,0,0,0,0-2H13V9A1,1,0,0,0,12,8Z"/></svg></a>
+											</div>
+										</div>
+										<% if (completedSales && completedSales.length > 0) { %>
+											<div class="dashbox__list-wrap">
+												<div class="dashbox__scroll">
+													<% completedSales.forEach((sale, index) => { %>
+													<div class="dashbox__note dashbox__note--succ">
+														<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.72,8.79l-4.29,4.3L8.78,11.44a1,1,0,1,0-1.41,1.41l2.35,2.36a1,1,0,0,0,.71.29,1,1,0,0,0,.7-.29l5-5a1,1,0,0,0,0-1.42A1,1,0,0,0,14.72,8.79ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"/></svg>
+														<p><a href="#modal-order-<%= sale._id %>" class="open-modal">Order #<%= sale.orderCode %></a> was successful!</p>
+														<span><%= new Date(sale.createdAt).toLocaleString() %></span>
+													</div>
+													<% }); %>
+												</div>
+											</div>
+											<% } else { %>
+											<div class="dashbox__list-wrap">
+												<div class="dashbox__scroll">
+													<div class="dashbox__note">
+														<p>No completed orders yet.</p>
+													</div>
+												</div>
+											</div>
+											<% } %>
+											
+											<!-- Modal templates for each order -->
+											<% if (completedSales && completedSales.length > 0) { %>
+												<% completedSales.forEach(sale => { %>
+												<div id="modal-order-<%= sale._id %>" class="zoom-anim-dialog mfp-hide modal">
+													<h6 class="modal__title">Order Details #<%= sale.orderCode %></h6>
+													
+													<p class="modal__text">Order Date: <%= new Date(sale.createdAt).toLocaleString() %></p>
+													<p class="modal__text">Payment Method: <%= sale.paymentMethod %></p>
+													<p class="modal__text">Total Amount: $<%= sale.total.toFixed(2) %></p>
+													<p class="modal__text">Status: <span class="text-success">Completed</span></p>
+													
+													<div class="modal__btns">
+														<button class="modal__btn modal__btn--dismiss" type="button">Close</button>
+													</div>
+												</div>
+												<% }); %>
+											<% } %>
+									</div>
+								</div>
+								<!-- end dashbox -->
+
+								<!-- dashbox -->
+								<div class="col-12 col-lg-6">
+									<div class="dashbox">
+										<div class="dashbox__title">
+											<h3><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.65,2.24a1,1,0,0,0-.8-.23l-13,2A1,1,0,0,0,7,5V15.35A3.45,3.45,0,0,0,5.5,15,3.5,3.5,0,1,0,9,18.5V10.86L20,9.17v4.18A3.45,3.45,0,0,0,18.5,13,3.5,3.5,0,1,0,22,16.5V3A1,1,0,0,0,21.65,2.24ZM5.5,20A1.5,1.5,0,1,1,7,18.5,1.5,1.5,0,0,1,5.5,20Zm13-2A1.5,1.5,0,1,1,20,16.5,1.5,1.5,0,0,1,18.5,18ZM20,7.14,9,8.83v-3L20,4.17Z"/></svg> Your Favorite List</h3>
+
+											<div class="dashbox__wrap">
+												<a class="dashbox__refresh" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,0,0,5.12,4.77V3a1,1,0,0,0-2,0V7.5a1,1,0,0,0,1,1H8.62a1,1,0,0,0,0-2H6.22A8,8,0,1,1,4,12a1,1,0,0,0-2,0A10,10,0,1,0,12,2Zm0,6a1,1,0,0,0-1,1v3a1,1,0,0,0,1,1h2a1,1,0,0,0,0-2H13V9A1,1,0,0,0,12,8Z"/></svg></a>
+												<a class="dashbox__more" href="#">View All</a>
+											</div>
+										</div>
+
+										<div class="dashbox__list-wrap">
+											<div class="audio-player">
+												<audio hidden id="audioPlayer" controls></audio>
+												
+												<button id="playPauseBtn">▶</button>
+												<span id="currentTime">0:00</span> /
+												<span id="duration">0:00</span>
+											
+												<input type="range" id="progressBar" value="0" min="0" step="1">
+											
+												<button id="muteBtn">🔊</button>
+												<input type="range" id="volumeBar" min="0" max="1" step="0.1" value="1">
+												
+											</div> 
+											<ul class="main__list main__list--dashbox">
+                                                <% if (favorites.length > 0) { %>
+													<% favorites.forEach(fav => { %>
+														<li class="single-item">
+															<% if (fav.sound.preview) { %>
+																<a data-link data-title="<%= fav.sound.name %>" data-artist="<%= fav.sound.tag %>" data-img="img/covers/cover1.jpg" 
+																	class="single-item__cover" onclick="playSound('<%= fav.sound.preview %>')">
+																	<img src="img/covers/cover1.jpg" alt="">
+																	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+																		<path d="M18.54,9,8.88,3.46a3.42,3.42,0,0,0-5.13,3V17.58A3.42,3.42,0,0,0,7.17,21a3.43,3.43,0,0,0,1.71-.46L18.54,15a3.42,3.42,0,0,0,0-5.92Zm-1,4.19L7.88,18.81a1.44,1.44,0,0,1-1.42,0,1.42,1.42,0,0,1-.71-1.23V6.42a1.42,1.42,0,0,1,.71-1.23A1.51,1.51,0,0,1,7.17,5a1.54,1.54,0,0,1,.71.19l9.66,5.58a1.42,1.42,0,0,1,0,2.46Z"/>
+																	</svg>
+																	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+																		<path d="M16,2a3,3,0,0,0-3,3V19a3,3,0,0,0,6,0V5A3,3,0,0,0,16,2Zm1,17a1,1,0,0,1-2,0V5a1,1,0,0,1,2,0ZM8,2A3,3,0,0,0,5,5V19a3,3,0,0,0,6,0V5A3,3,0,0,0,8,2ZM9,19a1,1,0,0,1-2,0V5A1,1,0,0,1,9,5Z"/>
+																	</svg>
+																</a>
+															<% } else { %>
+																<span>Không có bản xem trước</span>
+															<% } %>
+															<div class="single-item__title">
+																<h4><a href="#"><%= fav.sound.name %></a></h4>
+																<span><a href="artist.html"><%= fav.sound.tag %></a></span>
+																
+															</div>
+															<a href="#" class="single-item__add">
+																<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+																	<path d="M19,11H13V5a1,1,0,0,0-2,0v6H5a1,1,0,0,0,0,2h6v6a1,1,0,0,0,2,0V13h6a1,1,0,0,0,0-2Z"/>
+																</svg>
+															</a>
+															<a href="#" class="single-item__export">
+																<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+																	<path d="M21,14a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V15a1,1,0,0,0-2,0v4a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V15A1,1,0,0,0,21,14Zm-9.71,1.71a1,1,0,0,0,.33.21.94.94,0,0,0,.76,0,1,1,0,0,0,.33-.21l4-4a1,1,0,0,0-1.42-1.42L13,12.59V3a1,1,0,0,0-2,0v9.59l-2.29-2.3a1,1,0,1,0-1.42,1.42Z"/>
+																</svg>
+															</a>
+															<span class="single-item__time"><%= fav.sound.duration %></span>
+														</li>
+													<% }); %>
+												<% } else { %>
+													<p>No favorite sounds yet.</p>
+												<% } %>
+												
+												
+												
+											
+												
+												
+											</ul>
+										</div>
+									</div>
+								</div>
+								<!-- end dashbox -->
+							</div>
+						</div>
+
+					
+
+						
+
+						<div class="tab-pane fade" id="tab-4" role="tabpanel">
+							<div class="row row--grid">
+								<!-- details form -->
+								<div class="col-12 col-lg-6">
+									<form action="#" class="sign__form sign__form--profile">
+										<div class="row">
+											<div class="col-12">
+												<h4 class="sign__title">Profile details</h4>
+											</div>
+
+											
+
+											<div class="col-12 col-md-6 col-lg-12 col-xl-6">
+												<div class="sign__group">
+													<label class="sign__label" for="email">Email</label>
+													<input id="email" type="text" name="email" class="sign__input" placeholder="email@email.com">
+												</div>
+											</div>
+
+											<div class="col-12 col-md-6 col-lg-12 col-xl-6">
+												<div class="sign__group">
+													<label class="sign__label" for="firstname">First name</label>
+													<input id="firstname" type="text" name="firstname" class="sign__input" placeholder="John">
+												</div>
+											</div>
+
+											<div class="col-12 col-md-6 col-lg-12 col-xl-6">
+												<div class="sign__group">
+													<label class="sign__label" for="lastname">Last name</label>
+													<input id="lastname" type="text" name="lastname" class="sign__input" placeholder="Doe">
+												</div>
+											</div>
+
+											<div class="col-12">
+												<button class="sign__btn" type="button">Save</button>
+											</div>
+										</div>
+									</form>
+								</div>
+								<!-- end details form -->
+
+								
+								<!-- end password form -->
+							</div>
+						</div>
+					</div>
+					<!-- end content tabs -->
+				</div>
+			</div>	
+		</div>
+	</main>
+			<%- include('partials/footer') %>
+			<script>
+				document.addEventListener("DOMContentLoaded", function () {
+					const audio = document.getElementById("audioPlayer");
+					const audioContainer = document.querySelector(".audio-player");
+					const playPauseBtn = document.getElementById("playPauseBtn");
+					const progressBar = document.getElementById("progressBar");
+					const currentTimeDisplay = document.getElementById("currentTime");
+					const durationDisplay = document.getElementById("duration");
+					const muteBtn = document.getElementById("muteBtn");
+					const volumeBar = document.getElementById("volumeBar");
+		
+					function playSound(url) {
+						if (audio.src !== url) {
+							audio.src = url;
+						}
+						audio.play();
+						audioContainer.style.display = "flex";
+						playPauseBtn.textContent = "⏸";
+					}
+		
+					playPauseBtn.addEventListener("click", () => {
+						if (audio.paused) {
+							audio.play();
+							playPauseBtn.textContent = "⏸";
+						} else {
+							audio.pause();
+							playPauseBtn.textContent = "▶";
+						}
+					});
+		
+					audio.addEventListener("timeupdate", () => {
+						progressBar.value = (audio.currentTime / audio.duration) * 100;
+						currentTimeDisplay.textContent = formatTime(audio.currentTime);
+					});
+		
+					audio.addEventListener("loadedmetadata", () => {
+						durationDisplay.textContent = formatTime(audio.duration);
+					});
+		
+					progressBar.addEventListener("input", () => {
+						audio.currentTime = (progressBar.value / 100) * audio.duration;
+					});
+		
+					muteBtn.addEventListener("click", () => {
+						audio.muted = !audio.muted;
+						muteBtn.textContent = audio.muted ? "🔇" : "🔊";
+					});
+		
+					volumeBar.addEventListener("input", () => {
+						audio.volume = volumeBar.value;
+					});
+		
+		
+					audio.addEventListener("ended", () => {
+						audioContainer.style.display = "none";
+					});
+		
+					function formatTime(seconds) {
+						let mins = Math.floor(seconds / 60);
+						let secs = Math.floor(seconds % 60);
+						return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+					}
+		
+					window.playSound = playSound;
+				});
+		
+				document.querySelectorAll(".hero__slide").forEach(slide => {
+					let bg = slide.getAttribute("data-bg");
+					if (bg) {
+						slide.style.backgroundImage = `url(${bg})`;
+					}
+				});
+			</script>
+</body>
+</html>

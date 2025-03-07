@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Canceled</title>
+    <%- include('partials/css') %>
+    <link rel="stylesheet" href="/css/payment.css"> <!-- Optional: Add your CSS file -->
+</head>
+<body>
+    <%- include('partials/header') %>
+    <%- include('partials/sidebar') %>
+    <main class="main">
+        <div class="container-fluid">
+            <div class="payment">
+                <div class="payment-container">
+                    <h1>Payment Canceled ❌</h1>
+                    <p>Your payment has been canceled. If this was a mistake, you can try again.</p>
+                    <form action="/pay/pay" method="post">
+                        <button type="submit" class="hero__btn hero__btn--red">Retry Payment</button>
+                    </form>
+                    <a href="/" class="btn">Go to Home</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+  
+    
+</body>
+</html>

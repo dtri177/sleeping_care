@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('partials/head_admin'); %>
+
+    <body class="sidebar-mini fixed">
+        <div class="loader-bg">
+            <div class="loader-bar"></div>
+        </div>
+        <div class="wrapper">
+            <%- include('common/side_nav'); %>
+
+                <div class="content-wrapper">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="main-header">
+                                <h4>White Noise Sound Statistics</h4>
+                            </div>
+                        </div>
+
+                        <div class="row dashboard-header"></div>
+
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-header-text">Most Listened Sounds</h5>
+                                    </div>
+                                    <div class="card-block">
+                                        <div id="soundsChart" style="min-width: 250px; height: 330px; margin: 0 auto">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-12">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-6 grid-item">
+                                        <div class="card dashboard-product">
+                                            <span>Total Listening Sessions</span>
+                                            <h2 class="dashboard-total-products">
+                                                <%= totalFavorites %>
+                                            </h2>
+                                            <div class="side-box">
+                                                <i class="ti-headphone text-primary-color"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-12 col-lg-6 grid-item">
+                                        <div class="card dashboard-product">
+                                            <span>Unique Users</span>
+                                            <h2 class="dashboard-total-products">
+                                                <%= uniqueUsersCount %>
+                                            </h2>
+                                            <div class="side-box">
+                                                <i class="ti-user text-success-color"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-header-text">Sound Listening Statistics</h5>
+                                    </div>
+                                    <div class="card-block">
+                                        <div class="table-responsive">
+                                            <table class="table m-b-0 photo-table">
+                                                <thead>
+                                                    <tr class="text-uppercase">
+                                                        <th>Rank</th>
+                                                        <th>Sound Name</th>
+                                                        <th>Listen Count</th>
+                                                        <th>Total Listening Time</th>
+                                                        <th>Average Time Per Session</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% soundStats.forEach((stat, index)=> { %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= index + 1 %>
+                                                            </td>
+                                                            <td>
+                                                                <%= stat._id.name %>
+                                                            </td>
+                                                            <td>
+                                                                <%= stat.count %>
+                                                            </td>
+                                                            <td>
+                                                                <%= Math.round(stat.totalListeningTime / 60) %> minutes
+                                                            </td>
+                                                            <td>
+                                                                <%= Math.round((stat.totalListeningTime / stat.count) /
+                                                                    60) %> minutes
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-header-text">Listening Time Distribution</h5>
+                                    </div>
+                                    <div class="card-block">
+                                        <div id="timeChart" style="min-width: 250px; height: 330px; margin: 0 auto">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script src="https://code.highcharts.com/highcharts.js"></script>
+                    <script>
+                        // Parse sound data from server
+
+                        const soundNames = JSON.parse('<%- JSON.stringify(soundNames) %>');
+                        const listenCounts = JSON.parse('<%- JSON.stringify(listenCounts) %>');
+                        const listenTimes = JSON.parse('<%- JSON.stringify(listenTimes) %>');
+
+
+                        // Prepare data for Highcharts count chart
+                        Highcharts.chart('soundsChart', {
+                            chart: {
+                                type: 'bar'
+                            },
+                            title: {
+                                text: 'Most Popular White Noise Sounds'
+                            },
+                            xAxis: {
+                                categories: soundNames,
+                                title: {
+                                    text: 'Sound Name'
+                                }
+                            },
+                            yAxis: {
+                                title: {
+                                    text: 'Number of Listens'
+                                },
+                                min: 0
+                            },
+                            legend: {
+                                reversed: true
+                            },
+                            plotOptions: {
+                                series: {
+                                    stacking: 'normal',
+                                    dataLabels: {
+                                        enabled: true
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'Listens',
+                                data: listenCounts,
+                                color: '#4CAF50'
+                            }]
+                        });
+
+                        // Prepare data for listening time chart
+                        Highcharts.chart('timeChart', {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: 'Total Listening Time Per Sound (Minutes)'
+                            },
+                            xAxis: {
+                                categories: soundNames,
+                                title: {
+                                    text: 'Sound Name'
+                                }
+                            },
+                            yAxis: {
+                                title: {
+                                    text: 'Minutes Listened'
+                                },
+                                min: 0
+                            },
+                            plotOptions: {
+                                column: {
+                                    dataLabels: {
+                                        enabled: true,
+                                        formatter: function () {
+                                            return Math.round(this.y / 60) + ' min';
+                                        }
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'Total Listening Time',
+                                data: listenTimes.map(time => time / 60), // Convert seconds to minutes
+                                color: '#2196F3'
+                            }]
+                        });
+                    </script>
+
+                    <%- include('common/script'); %>
+                </div>
+        </div>
+    </body>
+
+</html>
