@@ -26,7 +26,7 @@ app.use(cookieParser());
 // Passport & Session
 
 app.use(session({
-  secret: process.env.REFRESH_SECRET ,
+  secret: process.env.SESSION_SECRET ,
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
