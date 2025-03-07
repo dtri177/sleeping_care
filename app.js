@@ -60,8 +60,6 @@ app.use('/admin', adminRoutes)
 // MongoDB Connection
 connectDB();
 
-require('dotenv').config();
-console.log();
 
 const PORT = process.env.PORT || 3000;
 
