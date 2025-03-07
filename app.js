@@ -12,7 +12,7 @@ const userRoutes = require('./routes/userRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 const payRoutes = require('./routes/payRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const MongoStore = require('connect-mongo').default;
+const MongoStore = require('connect-mongo')
 
 dotenv.config();
 require('./config/passport');
