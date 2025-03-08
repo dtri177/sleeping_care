@@ -8,12 +8,14 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: '/auth/google/callback',
+      callbackURL:
+      process.env.NODE_ENV === 'production'
+        ? process.env.GOOGLE_REDIRECT_URL
+        : '/auth/google/callback',
       scope: ["profile", "email"],
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log("Google Profile:", profile); // Debugging
 
         const email = profile.emails?.[0]?.value;
         if (!email) {
