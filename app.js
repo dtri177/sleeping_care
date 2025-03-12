@@ -46,7 +46,7 @@ app.use(passport.session());
 // Set View Engine
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 app.use('/', soundRoutes);
 app.use('/auth', authenRoutes);
