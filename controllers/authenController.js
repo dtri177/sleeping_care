@@ -100,10 +100,9 @@ exports.googleCallback = (req, res, next) => {
 exports.logout = (req, res) => {
   try {
   
-    res.clearCookie('userData', { path: '/', httpOnly: true, secure: true, sameSite: 'Strict' });
     // Clear JWT cookies
-    res.clearCookie('accessToken', { path: '/', httpOnly: true, sameSite: 'Lax' });
-    res.clearCookie('refreshToken', { path: '/', httpOnly: true, sameSite: 'Lax' });
+    res.clearCookie('accessToken', { path: '/', httpOnly: true, sameSite: 'Strict' });
+    res.clearCookie('refreshToken', { path: '/', httpOnly: true, sameSite: 'Strict' });
 
     // Destroy session properly
     req.logout((err) => {

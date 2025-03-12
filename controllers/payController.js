@@ -40,8 +40,8 @@ exports.pay = async (req, res) => {
       amount: amount,
       description: 'Buying V.I.P membership',
       orderCode,
-      returnUrl: `${process.env.DOMAIN}/pay/success?orderId=${sale._id}`, // Pass the sale ID
-      cancelUrl: `${process.env.DOMAIN}/pay/cancel?orderId=${sale._id}` // Also pass it to cancel
+      returnUrl: `${process.env.WEB_URL}/pay/success?orderId=${sale._id}`, // Pass the sale ID
+      cancelUrl: `${process.env.WEB_URL}/pay/cancel?orderId=${sale._id}` // Also pass it to cancel
     };
     
     const paymentLink = await payOs.createPaymentLink(order);
