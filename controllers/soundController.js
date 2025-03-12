@@ -1,16 +1,6 @@
 const User = require('../models/User');
 const Sound = require("../models/Sound");
 
-const isUserPremium = async (req) => {
-    try {
-        const userData = JSON.parse(req.cookies.userData || '{}');
-        const user = await User.findById(userData.id);
-        return user && user.is_premium;
-    } catch (error) {
-        return false;
-    }
-};
-
 const formatDuration = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -19,7 +9,8 @@ const formatDuration = (seconds) => {
 
 const getSoundsByTag = async (req, res, tag, view) => {
     try {
-        const isPremium = await isUserPremium(req);
+        // Use req.isPremium set by the middleware instead of calling isUserPremium
+        const isPremium = req.isPremium;
         const query = isPremium ? { tags: tag } : { tags: tag, is_premium: false };
         const sounds = await Sound.find(query);
 
@@ -42,7 +33,8 @@ exports.getPianoSound = (req, res) => getSoundsByTag(req, res, "piano", "pianoSo
 
 exports.getSounds = async (req, res) => {
     try {
-        const isPremium = await isUserPremium(req);
+        // Use req.isPremium set by the middleware
+        const isPremium = req.isPremium;
         const query = isPremium ? {} : { is_premium: false };
         const sounds = await Sound.find(query);
 

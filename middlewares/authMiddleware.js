@@ -35,23 +35,23 @@ const canPurchasePremium = async (req, res, next) => {
 
     next();
 };
-
-const checkPremiumAccess = async (req, res, next) => {
-    if (!req.user) {
-        return res.redirect('/auth/sign-in');
+const checkPremiumStatus = async (req, res, next) => {
+    try {
+        if (!req.user) {
+            req.isPremium = false;
+        } else {
+            const user = await User.findById(req.user.id);
+            req.isPremium = user && user.is_premium && 
+                            (user.premium_expired_at && new Date(user.premium_expired_at) > new Date());
+        }
+        next();
+    } catch (error) {
+        console.error("Error checking premium status:", error);
+        req.isPremium = false;
+        next();
     }
-    const userData = req.user
-    const user = await User.findById(userData.id)
-
-    const now = new Date();
-    // Allow access if user has an active premium subscription
-    if (!user.is_premium || (user.premium_expired_at && new Date(user.premium_expired_at) <= now)) {
-        return res.status(403).render('errors', { message: "You need premium access to view this content." });
-
-    }
-
-    next();
 };
+
 
 const hasRole = (roles) => (req, res, next) => {
     if (!req.user || !req.user.role) {
@@ -69,7 +69,7 @@ const hasRole = (roles) => (req, res, next) => {
 module.exports = {
     authenticateUser,
  
-    checkPremiumAccess,
+    checkPremiumStatus,
     canPurchasePremium,
     hasRole
 };
