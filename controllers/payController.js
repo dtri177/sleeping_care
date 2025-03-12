@@ -15,7 +15,7 @@ exports.cancel = async (req, res) => {
 
 exports.pay = async (req, res) => {
   try {
-    const userData = req.cookies.userData ? JSON.parse(req.cookies.userData) : null;
+    const userData = req.user
     if (!userData) {
       return res.status(401).render('errors', { message: 'User not authenticated' });
     }
