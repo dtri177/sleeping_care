@@ -7,7 +7,8 @@ const authenticateUser = (req, res, next) => {
     const token = req.cookies.accessToken || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-        return res.redirect('/auth/sign-in');
+        req.user = null;
+        return next();
     }
 
     try {

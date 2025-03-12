@@ -1,15 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const soundController = require("../controllers/soundController");
-const { checkPremiumStatus } = require("../middlewares/authMiddleware");
+const { authenticateUser, checkPremiumStatus } = require("../middlewares/authMiddleware");
 
-router.get("/",checkPremiumStatus, soundController.getSounds);
-router.get("/rain",checkPremiumStatus, soundController.getRainSound);
-router.get("/soothing",checkPremiumStatus, soundController.getSoothingSound);
-router.get("/ocean",checkPremiumStatus, soundController.getOceanSound);
-router.get("/piano",checkPremiumStatus, soundController.getPianoSound);
-router.get("/play/:id",checkPremiumStatus, soundController.getSoundById);
-router.put("/update-all",checkPremiumStatus, soundController.updateAllSounds);
-router.delete("/delete-short-sounds",checkPremiumStatus, soundController.deleteShortSounds);
+// Public routes - accessible without authentication
+router.get("/", authenticateUser, checkPremiumStatus, soundController.getSounds);
+router.get("/rain", authenticateUser, checkPremiumStatus, soundController.getRainSound);
+router.get("/soothing", authenticateUser, checkPremiumStatus, soundController.getSoothingSound);
+router.get("/ocean", authenticateUser, checkPremiumStatus, soundController.getOceanSound);
+router.get("/piano", authenticateUser, checkPremiumStatus, soundController.getPianoSound);
+router.get("/play/:id", authenticateUser, checkPremiumStatus, soundController.getSoundById);
+
+// Protected routes - require authentication
+router.put("/update-all", authenticateUser, checkPremiumStatus, soundController.updateAllSounds);
+router.delete("/delete-short-sounds", authenticateUser, checkPremiumStatus, soundController.deleteShortSounds);
 
 module.exports = router;

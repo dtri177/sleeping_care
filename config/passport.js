@@ -39,7 +39,6 @@ passport.use(
             user.googleId = profile.id;
             await user.save();
           }
-          console.log("Existing user found:", user);
         }
 
         return done(null, user);
