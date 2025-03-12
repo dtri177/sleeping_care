@@ -23,7 +23,7 @@ const canPurchasePremium = async (req, res, next) => {
     if (!req.user) {
         return res.redirect('/auth/sign-in');
     }
-    const userData = req.cookies.userData ? JSON.parse(req.cookies.userData) : null;
+    const userData = req.user
     const user = await User.findById(userData.id)
     const now = new Date();
 
@@ -40,7 +40,7 @@ const checkPremiumAccess = async (req, res, next) => {
     if (!req.user) {
         return res.redirect('/auth/sign-in');
     }
-    const userData = req.cookies.userData ? JSON.parse(req.cookies.userData) : null;
+    const userData = req.user
     const user = await User.findById(userData.id)
 
     const now = new Date();
