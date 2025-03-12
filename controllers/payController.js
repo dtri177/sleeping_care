@@ -15,7 +15,7 @@ exports.cancel = async (req, res) => {
 
 exports.pay = async (req, res) => {
   try {
-    const userData = req.user
+    const userData = req.user;
     if (!userData) {
       return res.status(401).render('errors', { message: 'User not authenticated' });
     }
@@ -40,8 +40,8 @@ exports.pay = async (req, res) => {
       amount: amount,
       description: 'Buying V.I.P membership',
       orderCode,
-      returnUrl: `${process.env.WEB_URL}/pay/success?orderId=${sale._id}`, // Pass the sale ID
-      cancelUrl: `${process.env.WEB_URL}/pay/cancel?orderId=${sale._id}` // Also pass it to cancel
+      returnUrl: `${process.env.WEB_URL}/pay/success?orderId=${sale._id}&userId=${userData.id}`, // Pass both sale ID and user ID
+      cancelUrl: `${process.env.WEB_URL}/pay/cancel?orderId=${sale._id}`
     };
     
     const paymentLink = await payOs.createPaymentLink(order);
@@ -52,12 +52,12 @@ exports.pay = async (req, res) => {
   }
 };
 
-// Add a success handler
+// Success handler that doesn't rely solely on req.user
 exports.success = async (req, res) => {
   try {
-    const { orderId } = req.query;
-    if (!orderId) {
-      return res.status(400).render('errors', { message: 'Order ID is missing' });
+    const { orderId, userId } = req.query;
+    if (!orderId || !userId) {
+      return res.status(400).render('errors', { message: 'Order ID or User ID is missing' });
     }
     
     // Find the sale record
@@ -70,19 +70,22 @@ exports.success = async (req, res) => {
     sale.status = 'completed';
     await sale.save();
     
-    // Get the user
-    const userData = req.user
-    if (!userData) {
-      return res.status(401).render('errors', { message: 'User not authenticated' });
+    // Get the user from userId in query parameters as a fallback
+    let userData = req.user;
+    let userId_final = userId;
+    
+    // If req.user exists, use that instead
+    if (userData && userData.id) {
+      userId_final = userData.id;
     }
     
     // Extend VIP membership for 30 days
     const premiumExpirationDate = new Date();
     premiumExpirationDate.setDate(premiumExpirationDate.getDate() + 30);
     
-    // Update user to premium
+    // Update user to premium using the userId from the query parameter or req.user
     const updatedUser = await User.findByIdAndUpdate(
-      userData.id,
+      userId_final,
       {
         is_verified: true,
         is_premium: true,
@@ -96,14 +99,14 @@ exports.success = async (req, res) => {
     }
     
     // Success page or redirect to homepage
-    res.redirect('/')
+    res.redirect('/');
   } catch (error) {
     console.error("Payment success handler error:", error);
     return res.status(500).render('errors', { message: "Internal Server Error" });
   }
 };
 
-// Add a webhook handler for PayOS notifications (if available)
+// Improved webhook handler
 exports.webhook = async (req, res) => {
   try {
     const payload = req.body;
@@ -130,14 +133,17 @@ exports.webhook = async (req, res) => {
         const premiumExpirationDate = new Date();
         premiumExpirationDate.setDate(premiumExpirationDate.getDate() + 30);
         
-        await User.findByIdAndUpdate(
+        const user = await User.findByIdAndUpdate(
           sale.customer,
           {
             is_verified: true,
             is_premium: true,
             premium_expired_at: premiumExpirationDate
-          }
+          },
+          { new: true }
         );
+        
+        console.log(`User ${sale.customer} premium status updated via webhook`, user);
       }
       
       return res.status(200).json({ success: true });
