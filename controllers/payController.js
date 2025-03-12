@@ -8,7 +8,6 @@ const payOs = new PayOs(
   process.env.PAY_API_KEY,
   process.env.PAY_CHECKSUM_KEY
 );
-const { generateAccessToken, generateRefreshToken } = require('../utils/tokenUtils');
 
 exports.cancel = async (req, res) => {
   res.render('cancel');
@@ -53,7 +52,7 @@ exports.pay = async (req, res) => {
   }
 };
 
-// Success handler with auto-login functionality
+// Success handler that doesn't rely solely on req.user
 exports.success = async (req, res) => {
   try {
     const { orderId, userId } = req.query;
@@ -72,14 +71,10 @@ exports.success = async (req, res) => {
     await sale.save();
     
     // Get the user from userId in query parameters as a fallback
-    let userData = req.user;
     let userId_final = userId;
     
     // If req.user exists, use that instead
-    if (userData && userData.id) {
-      userId_final = userData.id;
-    }
-    
+   
     // Extend VIP membership for 30 days
     const premiumExpirationDate = new Date();
     premiumExpirationDate.setDate(premiumExpirationDate.getDate() + 30);
@@ -98,26 +93,6 @@ exports.success = async (req, res) => {
     if (!updatedUser) {
       return res.status(404).render('errors', { message: 'User not found' });
     }
-    
-    // Generate new tokens for the user
-    const accessToken = generateAccessToken(updatedUser);
-    const refreshToken = generateRefreshToken(updatedUser);
-    
-    // Set the tokens as cookies
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Set to true in production
-      maxAge: 15 * 60 * 1000 // 15 minutes
-    });
-    
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Set to true in production
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-    });
-    
-    // Log user auto-login
-    console.log(`Auto-login successful for user ${updatedUser._id} after payment`);
     
     // Success page or redirect to homepage
     res.redirect('/');

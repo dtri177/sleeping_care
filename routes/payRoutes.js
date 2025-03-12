@@ -5,6 +5,6 @@ const { authenticateUser,canPurchasePremium } = require('../middlewares/authMidd
 const router = express.Router();
 router.get('/cancel',cancel)
 router.post('/pay',authenticateUser,canPurchasePremium,pay)
-router.get('/success',authenticateUser, success);
+router.get('/success', success);
 router.post('/webhook', webhook);
 module.exports = router;
