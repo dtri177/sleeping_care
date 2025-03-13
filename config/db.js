@@ -8,16 +8,15 @@ const connectDB = async () => {
   }
 
   const connectOptions = {
-    serverSelectionTimeoutMS: 10000, // Increased from 5000
-    socketTimeoutMS: 45000,
+    serverSelectionTimeoutMS: 20000, // Increased from 10000
+    socketTimeoutMS: 60000, // Increased from 45000
     retryWrites: true,
     retryReads: true,
-    maxPoolSize: 10,
-    minPoolSize: 2,
-    connectTimeoutMS: 10000,
-    heartbeatFrequencyMS: 10000,
-    // Add additional options
-    family: 4 // Force IPv4 
+    maxPoolSize: 20, // Increased from 10
+    minPoolSize: 5, // Increased from 2
+    connectTimeoutMS: 20000, // Increased from 10000
+    heartbeatFrequencyMS: 5000, // Adjusted for faster detection of lost connections
+    family: 4 // Force IPv4
   };
 
   try {
