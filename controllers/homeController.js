@@ -33,11 +33,11 @@ exports.getDashboard = async (req, res) => {
         // Get daily sales for the month
         const dailySalesResult = await Sale.aggregate([
             { $match: { createdAt: { $gte: firstDayOfMonth }, status: "completed" } },
-            { 
+            {
                 $group: {
                     _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
                     total: { $sum: "$total" }
-                } 
+                }
             },
             { $sort: { _id: 1 } }
         ]);
@@ -60,7 +60,14 @@ exports.getDashboard = async (req, res) => {
                 statusData[item._id] = item.count;
             }
         });
-        
+        const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
+
+        // Get total sales for the current year
+        const yearlySalesResult = await Sale.aggregate([
+            { $match: { createdAt: { $gte: firstDayOfYear }, status: "completed" } },
+            { $group: { _id: null, total: { $sum: "$total" } } }
+        ]);
+        const yearlySales = yearlySalesResult.length > 0 ? yearlySalesResult[0].total : 0;
         // Merge status data into salesData for the template
         Object.assign(salesData, statusData);
 
@@ -71,7 +78,8 @@ exports.getDashboard = async (req, res) => {
             totalSales,
             monthlySales,
             salesData,
-            users
+            users,
+            yearlySales
         });
     } catch (error) {
         console.error("Error fetching dashboard data:", error);

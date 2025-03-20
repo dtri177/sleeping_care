@@ -7,7 +7,7 @@ const connectDB = async () => {
     throw new Error('MONGO_URI is not defined in environment variables');
   }
 
-  const connectOptions = {
+    const connectOptions = {
     serverSelectionTimeoutMS: 20000, // Increased from 10000
     socketTimeoutMS: 60000, // Increased from 45000
     retryWrites: true,
