@@ -20,7 +20,7 @@ exports.pay = async (req, res) => {
       return res.status(401).render('errors', { message: 'User not authenticated' });
     }
     
-    const amount = 2000;
+    const amount = 20000;
     const orderCode = Date.now() % 9007199254740991;
     
     // Create a pending sale record first
